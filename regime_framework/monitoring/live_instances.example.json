@@ -1,0 +1,10 @@
+{
+  "_comment": "Sablon a monitoring/dashboard_web.py 'Heartbeat archiválás' funkciójához -- másold 'live_instances.json' néven UGYANEBBE a mappába, és sorold fel benne az ÖSSZES jelenleg élő EA-példányt (symbol+magic), terminálonként. Ez a lista dönti el, mely heartbeat-fájl SZÁMÍT élőnek (a rajta kívül eső fájlok 'árvának' minősülnek, archiválás után törölhetők), ÉS ez adja meg, mely symbolokat kell 'piac zárva' szempontból ellenőrizni, mielőtt egy terminál újraindul. A 'terminal' mező a terminals.json-beli 'name' mezővel egyezzen meg. Kézzel karbantartott, szándékosan NEM generált -- .gitignore-olva, mint a terminals.json.",
+  "instances": [
+    { "terminal": "IC Markets", "symbol": "USTEC", "magic": 202609 },
+    { "terminal": "IC Markets", "symbol": "US30", "magic": 202611 },
+    { "terminal": "XM", "symbol": "US100Cash#", "magic": 202609 },
+    { "terminal": "XM", "symbol": "US500Cash#", "magic": 202629 },
+    { "terminal": "XM", "symbol": "US30Cash#", "magic": 202649 }
+  ]
+}

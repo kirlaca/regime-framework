@@ -1,0 +1,55 @@
+; RegimeFramework_EA_M10_10d.mq5 -- IC Markets, USTEC (10 napos/1320 baros klasszifikator-ablak)
+; Forras: timeframe_deepdive/FINDINGS_LOG.md 4-6. bejegyzes (500-trial Optuna, validacio nettó PF=2.08,
+; n=185, nettó PnL=403.57 USD, 2025-11-14..2026-09-15) + 8. bejegyzes (klasszifikator-ablak
+; empirikus megerositese M10-en, 06_m10_classifier_window_robustness.py)
+; Lot: 0.3 @ $2000 tőke (biztonságos max, 25% margin-kihasználtság -- lásd 7. bejegyzés,
+; scripts/05_ustec_lot_size_sensitivity.py)
+; FIGYELEM: ez a .set a RegimeFramework_EA_M10_10d.mq5-hez tartozik, NEM a standard
+; RegimeFramework_EA.mq5-hez -- a klasszifikator-ablak (1320 vs 8640 bar) miatt a ket EA
+; MAS viselkedest ad ugyanezekkel a parameterekkel.
+
+InpEnableMeanReversion=true
+InpEnableTrendFollowing=true
+InpEnableLastHourContinuation=true
+InpEnableFridayShort=true
+
+InpMrEmaPeriod=120
+InpMrMultiplier=3.016810099237794
+InpMrSlMultiplier=0.5019957737381252
+InpMrRiskRewardRatio=5.998892385646057
+
+InpTfFastEmaDays=1.4213259014544624
+InpTfSlowEmaDays=2.2214437598322476
+InpTfSlAtrMultiplier=2.8097032156200794
+InpTfTrailAtrMultiplier=3.388832537439072
+InpTfRsiLongMin=76.66752227906817
+InpTfRsiShortMax=57.88696992297191
+InpTfRsiPeriod=14
+InpTfBollingerPeriod=39
+InpTfBollingerK=2.8713829985073884
+InpTfBarsPerDay=144
+
+InpLhcSlAtrMultiplier=3.547856495599582
+InpLhcFinalHourStart=20
+InpLhcSessionEndHour=21
+InpLhcMinTrendBars=20
+InpLhcDstAware=false
+
+InpFsTargetDayOfWeek=4
+InpFsTargetHour=23
+InpFsSlAtrMultiplier=1.1558558016169869
+InpFsHoldBars=11
+InpFsSafetyCloseHour=23
+InpFsSafetyCloseMinute=49
+
+InpSessionStartHour=16
+InpSessionStartMinute=30
+InpSessionEndHour=21
+InpForceCloseHour=23
+InpForceCloseMinute=49
+InpLotSize=0.3
+InpSlippagePoints=20
+InpMagicNumber=101001
+
+InpUseMarginBasedSizing=false
+InpMarginAllocPct=5.348

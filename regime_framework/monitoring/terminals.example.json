@@ -1,0 +1,15 @@
+{
+  "_comment": "Sablon a monitoring/heartbeat_dashboard.py-hoz -- másold 'terminals.json' néven UGYANEBBE a mappába, és írd át a valós elérési utakra azon a gépen (pl. VPS-en), ahol a dashboardot futtatod. A 'terminals.json' szándékosan nincs verziókövetve (.gitignore), mert gépenként/telepítésenként eltérő útvonalakat tartalmaz.",
+  "terminals": [
+    {
+      "name": "IC Markets",
+      "path": "D:\\MT5\\terminal64.exe"
+    },
+    {
+      "name": "XM",
+      "path": "C:\\Program Files\\MetaTrader 5\\terminal64.exe",
+      "_common_files_dir_comment": "Csak akkor add meg, ha ez a példány PORTABLE módban fut és emiatt NEM a szokásos %APPDATA%\\MetaQuotes\\Terminal\\Common\\Files mappát használja a FILE_COMMON-hoz -- egyébként hagyd ki, az alapértelmezett megosztott mappa lesz használva.",
+      "common_files_dir": null
+    }
+  ]
+}

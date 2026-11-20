@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "purpose": "Known market-closed / early-close calendar days, keyed by underlying market group. Used to (1) gate live EA entries on both IC Markets and XM so a CFD instance never opens a fresh position while the real underlying market is shut (2026-09-07 incident: IC Markets USTEC/US30 opened a trade on US Labor Day), and (2) optionally exclude holiday bars from Python walk-forward backtests to avoid thin-liquidity contamination.",
+    "why_this_exists": "2026-09-07: user reported a live IC Markets entry on a day the real market was closed. CFD brokers keep quoting a synthetic/rolled feed on exchange holidays -- wider spread, thin liquidity, less 'real' price action -- so trading needs an explicit calendar gate, not just reliance on session hours.",
+    "date_semantics": "Dates are the underlying exchange's calendar date (e.g. NYSE, Eastern Time). Both live brokers' server time places the US session (16:30-21:00 server time) within the SAME calendar date as the US Eastern-time session, so these dates are used directly as broker-server-time dates -- no timezone conversion needed. If a market group is added whose session crosses midnight relative to its home exchange's date, re-verify this assumption before reusing it blindly.",
+    "dst_note_2026_09_07": "CONFIRMED (official IC Markets and XM sources, not inferred): both brokers' server clocks deliberately track US DST specifically (GMT+2 in US winter, GMT+3 in US summer, shifting on the US transition date) -- this is why the 'US' market group's dates/hours never drift. A market group for a non-US exchange (EU, Australia, South Africa -- researched 2026-09-07 for DE40/UK100/AUS200/SA40, none currently live) would need DST-aware session-hour handling before going live, since its home exchange's own DST calendar (or lack thereof, e.g. South Africa) does not match the broker server's US-pegged clock -- see PLAN.md 2.8 for the full writeup.",
+    "sources": [
+      "US: https://www.nyse.com/markets/hours-calendars (fetched 2026-09-07)",
+      "Broker DST policy: icmarkets.eu/blog/company-news/us-daylight-savings-server-time-changing-to-gmt3-2026/ and XM documentation (both fetched 2026-09-07)"
+    ],
+    "maintenance": "Update yearly -- most US holidays are fixed-formula (Nth weekday of a month) but Good Friday (Easter-linked) and any Saturday-holiday observance shifts must be re-checked against the NYSE calendar each year. Re-run regime_framework/deployment/generate_holiday_mqh.py after editing this file to refresh the MQL5 side."
+  },
+  "markets": {
+    "US": {
+      "description": "NYSE/NASDAQ -- covers USTEC/US30/US500 (IC Markets) and US30Cash#/US500Cash#/US100Cash# (XM)",
+      "closed_2026": [
+        "2026-01-01",
+        "2026-01-19",
+        "2026-02-16",
+        "2026-04-03",
+        "2026-05-25",
+        "2026-06-19",
+        "2026-07-03",
+        "2026-09-07",
+        "2026-11-26",
+        "2026-12-25"
+      ],
+      "early_close_2026": [
+        "2026-07-03",
+        "2026-11-27",
+        "2026-12-24"
+      ]
+    }
+  },
+  "symbol_market_map": {
+    "USTEC": "US",
+    "US30": "US",
+    "US500": "US",
+    "US100Cash#": "US",
+    "US500Cash#": "US",
+    "US30Cash#": "US"
+  }
+}

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "regime-framework"
+version = "0.1.0"
+description = "Regime-vezerelt, modularis kereskedesi keretrendszer (Python + MQL5)"
+requires-python = ">=3.10"
+dependencies = [
+    "MetaTrader5",
+    "numpy",
+    "pandas",
+    "optuna",
+]
+
+[tool.setuptools.packages.find]
+include = ["regime_framework*"]
+
+[tool.setuptools.package-data]
+regime_framework = ["data/*.json", "deployment/*.json", "monitoring/*.example.json", "monitoring/webapp/*"]

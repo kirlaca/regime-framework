@@ -1,0 +1,59 @@
+{
+  "_comment": "M30 production routing -- egyetlen forrás arra, melyik komponens fut melyik szimbólumon, milyen paraméterekkel és magic-kal. Lásd regime_deepdive/FINDINGS_LOG.md 1-36. bejegyzés a döntések indoklásáért. VÉGLEGES SCOPE (2026-09-16, entry 36, joint Optuna-hangolás után): MeanReversion + LastHourContinuation EGYÜTT, US30+US500-on -- USTEC, TrendFollowing ÉS FridayShort SEHOL nem fut M30-on (mindegyiket kimérve, dokumentáltan elutasítva -- lásd entry 33/35). A konfiguráció a joint Optuna-kereséssel lett hangolva (nem elszigetelten, mint a korábbi, mára elavult verzió), mert a kombinált-Engine teszt kimutatta, hogy a komponensek versengenek egymással az egy-pozíciós szabályon keresztül. A `lot_size` szándékosan NINCS itt (azt a compute_m30_lot_size.py számolja ki a megadott kezdőtőkéből).",
+  "broker": "IC Markets",
+  "timeframe": "M30",
+  "classifier_rolling_window_bars": 440,
+  "instances": [
+    {
+      "symbol": "US30",
+      "magic": 303002,
+      "components": {
+        "MeanReversion": {
+          "enabled": true,
+          "params": {"ema_period": 51, "mr_multiplier": 3.1202795961789, "sl_multiplier": 1.03654938769112, "risk_reward_ratio": 3.760715055169454}
+        },
+        "LastHourContinuation": {
+          "enabled": true,
+          "params": {"sl_atr_multiplier": 2.706079937419055, "min_trend_bars": 1}
+        },
+        "TrendFollowing": {
+          "enabled": false,
+          "_reason": "sajat, kulon hangolt konfiguracioja is megbukott a zart validacion (FINDINGS_LOG.md 10. bejegyzes, PF=0.99)"
+        },
+        "FridayShort": {
+          "enabled": false,
+          "_reason": "onmagaban veszteseges/nullszaldos, es a joint Optuna-osszevetes zajszinten azonos eredmenyt adott nelkule (FINDINGS_LOG.md 35. bejegyzes)"
+        }
+      }
+    },
+    {
+      "symbol": "US500",
+      "magic": 303003,
+      "components": {
+        "MeanReversion": {
+          "enabled": true,
+          "params": {"ema_period": 51, "mr_multiplier": 3.1202795961789, "sl_multiplier": 1.03654938769112, "risk_reward_ratio": 3.760715055169454}
+        },
+        "LastHourContinuation": {
+          "enabled": true,
+          "params": {"sl_atr_multiplier": 2.706079937419055, "min_trend_bars": 1}
+        },
+        "TrendFollowing": {
+          "enabled": false,
+          "_reason": "BARS_PER_DAY-hiba javitasa utan a zart validacion PF=0.98, ELVETVE (FINDINGS_LOG.md 30. bejegyzes)"
+        },
+        "FridayShort": {
+          "enabled": false,
+          "_reason": "onmagaban veszteseges/nullszaldos, es a joint Optuna-osszevetes zajszinten azonos eredmenyt adott nelkule (FINDINGS_LOG.md 35. bejegyzes)"
+        }
+      }
+    }
+  ],
+  "_excluded_symbols": {
+    "USTEC": "TELJESEN KIZARVA (2026-09-15, entry 33) -- sem MeanReversion, sem TrendFollowing, sem a ketto kombinacioja nem eleg eros ezen az idosikon (kombinalt netto PF~1.03, szemben a valos M10-es USTEC/US100Cash# 2.13-mal)."
+  },
+  "_validation_results_2026_08_31_slice": {
+    "US30": {"engine_trades": 282, "gross_pf": 1.08, "net_pf": 1.07, "net_pnl": 78.44},
+    "US500": {"engine_trades": 306, "gross_pf": 1.52, "net_pf": 1.44, "net_pnl": 63.62}
+  }
+}

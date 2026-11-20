@@ -1,0 +1,427 @@
+<title>Regime-Kapcsoló Vezérlés</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #f3f4f6;
+    --surface: #ffffff;
+    --ink: #1a2230;
+    --ink-muted: #5b6472;
+    --border: #c7ccd4;
+    --accent: #c8791f;
+    --accent-soft: #f4e3cc;
+    --good: #2f8f5b;
+    --good-soft: #dcf0e4;
+    --bad: #c94a3d;
+    --bad-soft: #f6dedb;
+    --neutral-outcome: #6b7280;
+    --neutral-outcome-soft: #e7e9ec;
+    --spine: #2b3648;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #11151c;
+      --surface: #1a212c;
+      --ink: #e6e9ef;
+      --ink-muted: #8b94a3;
+      --border: #323b4a;
+      --accent: #e0a552;
+      --accent-soft: #3a2c17;
+      --good: #4fbf85;
+      --good-soft: #163625;
+      --bad: #e2685a;
+      --bad-soft: #3a1f1c;
+      --neutral-outcome: #97a1b0;
+      --neutral-outcome-soft: #232a35;
+      --spine: #aab4c4;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #11151c;
+    --surface: #1a212c;
+    --ink: #e6e9ef;
+    --ink-muted: #8b94a3;
+    --border: #323b4a;
+    --accent: #e0a552;
+    --accent-soft: #3a2c17;
+    --good: #4fbf85;
+    --good-soft: #163625;
+    --bad: #e2685a;
+    --bad-soft: #3a1f1c;
+    --neutral-outcome: #97a1b0;
+    --neutral-outcome-soft: #232a35;
+    --spine: #aab4c4;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    margin: 0;
+    padding: 48px 32px 80px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 1180px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: clamp(26px, 3.4vw, 34px);
+    font-weight: 600;
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .intro {
+    max-width: 68ch;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .intro strong { color: var(--ink); font-weight: 600; }
+
+  .diagram-frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  svg { display: block; width: 100%; max-width: 1460px; height: auto; margin: 0 auto; }
+
+  figcaption {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    max-width: 78ch;
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 28px;
+  }
+
+  .legend h2 {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  .sw-settled { background: var(--surface); border-color: var(--spine); }
+  .sw-open { background: var(--accent-soft); border-color: var(--accent); }
+  .sw-dead { background: transparent; border: 1px dashed var(--ink-muted); }
+  .sw-good { background: var(--good-soft); border-color: var(--good); }
+  .sw-bad { background: var(--bad-soft); border-color: var(--bad); }
+  .sw-neutral { background: var(--neutral-outcome-soft); border-color: var(--neutral-outcome); }
+
+  .open-list {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 32px 16px 56px; }
+    .diagram-frame { padding: 14px; }
+  }
+</style>
+
+<div class="page">
+  <div>
+    <div class="eyebrow">Elméleti vázlat — még nincs kód</div>
+    <h1>Regime-kapcsolós vezérlés: blokkvázlat</h1>
+  </div>
+
+  <p class="intro">
+    Az ábra egyetlen bar feldolgozásának döntési útját mutatja a tervezett kétrétegű
+    architektúrában: előbb a <strong>session-fázis</strong> dönt arról, egyáltalán melyik
+    logika érvényes az adott időpontban, utána — csak a kereskedhető fázisokon belül — a
+    <strong>trend × volatilitás rács</strong> választja ki, melyik komponens (ha van) kaphat
+    szót. A borostyánszínű dobozok még nyitott kérdések: <em>melyik konkrét stratégia
+    kerüljön az adott rács-cellába</em>.
+  </p>
+
+  <figure class="diagram-frame" style="margin:0;">
+    <svg viewBox="0 0 1460 1560" role="img" aria-label="Blokkvázlat: egy bar feldolgozása a session-fázis kapun és a trend/volatilitás rácson át, XOR komponens-választásig és a lehetséges kifutási állapotokig.">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <g font-family="IBM Plex Sans, sans-serif" font-size="12.5" fill="currentColor">
+
+        <!-- Row A: new bar -->
+        <rect x="590" y="20" width="280" height="50" rx="5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="730" y="50" text-anchor="middle" font-weight="600">Új bar érkezik</text>
+        <line x1="730" y1="70" x2="730" y2="102" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+        <!-- Row B: base indicators -->
+        <rect x="470" y="102" width="520" height="58" rx="5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="730" y="126" text-anchor="middle" font-weight="600">Alap indikátorok számítása</text>
+        <text x="730" y="146" text-anchor="middle" font-size="11.5" fill="var(--ink-muted)">ATR · ADX/ER · EMA · volatilitás-percentilis · session-fázis</text>
+        <line x1="730" y1="160" x2="730" y2="196" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+        <!-- Row C: session-phase decision diamond -->
+        <polygon points="730,196 860,278 730,360 600,278" fill="none" stroke="var(--spine)" stroke-width="1.8"/>
+        <text x="730" y="270" text-anchor="middle" font-weight="600">1. RÉTEG</text>
+        <text x="730" y="288" text-anchor="middle" font-size="11.5">Session-fázis?</text>
+
+        <!-- fan arrows to 5 phase boxes -->
+        <line x1="700" y1="330" x2="140" y2="410" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="660" y1="350" x2="425" y2="410" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="730" y1="360" x2="730" y2="410" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrow)"/>
+        <line x1="800" y1="350" x2="995" y2="410" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="760" y1="330" x2="1280" y2="410" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+
+        <text x="220" y="400" font-size="10.5" fill="var(--ink-muted)">off-hours</text>
+        <text x="500" y="400" font-size="10.5" fill="var(--ink-muted)">rollover</text>
+        <text x="1020" y="400" font-size="10.5" fill="var(--ink-muted)">nyitás</text>
+        <text x="1310" y="400" font-size="10.5" fill="var(--ink-muted)">záró ablak</text>
+
+        <!-- Row D: 5 phase boxes -->
+        <rect x="40" y="410" width="200" height="60" rx="5" fill="none" stroke="var(--ink-muted)" stroke-dasharray="4 3" stroke-width="1.2"/>
+        <text x="140" y="435" text-anchor="middle" font-weight="600">OFF_HOURS</text>
+        <text x="140" y="452" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">nincs kereskedés</text>
+
+        <rect x="325" y="410" width="200" height="60" rx="5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <text x="425" y="435" text-anchor="middle" font-weight="600">ROLLOVER</text>
+        <text x="425" y="452" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">spread-tágulás órája</text>
+
+        <rect x="630" y="410" width="200" height="60" rx="5" fill="none" stroke="var(--spine)" stroke-width="1.8"/>
+        <text x="730" y="435" text-anchor="middle" font-weight="600">CORE_SESSION</text>
+        <text x="730" y="452" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">a fő kereskedési ablak</text>
+
+        <rect x="895" y="410" width="200" height="60" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="995" y="435" text-anchor="middle" font-weight="600">OPENING_RANGE</text>
+        <text x="995" y="452" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">nyitási sáv</text>
+
+        <rect x="1180" y="410" width="200" height="60" rx="5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <text x="1280" y="435" text-anchor="middle" font-weight="600">PRE_CLOSE</text>
+        <text x="1280" y="452" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">záró ablak</text>
+
+        <!-- OFF_HOURS dead end -->
+        <line x1="140" y1="470" x2="140" y2="502" stroke="var(--ink-muted)" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <rect x="40" y="502" width="200" height="40" rx="5" fill="none" stroke="var(--ink-muted)" stroke-dasharray="4 3" stroke-width="1.1"/>
+        <text x="140" y="527" text-anchor="middle" font-size="11.5" fill="var(--ink-muted)">nincs trade ezen a baron</text>
+
+        <!-- ROLLOVER -> only-close -->
+        <line x1="425" y1="470" x2="425" y2="502" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <rect x="325" y="502" width="200" height="46" rx="5" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        <text x="425" y="524" text-anchor="middle" font-size="11.5">csak zárás engedett</text>
+        <text x="425" y="540" text-anchor="middle" font-size="10" fill="var(--ink-muted)">új belépés tiltva</text>
+
+        <!-- OPENING_RANGE -> dedicated component -->
+        <line x1="995" y1="470" x2="995" y2="502" stroke="var(--accent)" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <rect x="895" y="502" width="200" height="46" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.1"/>
+        <text x="995" y="524" text-anchor="middle" font-size="11.5">dedikált nyitási</text>
+        <text x="995" y="540" text-anchor="middle" font-size="11.5">komponens (?)</text>
+
+        <!-- PRE_CLOSE -> forced close window -->
+        <line x1="1280" y1="470" x2="1280" y2="502" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <rect x="1180" y="502" width="200" height="46" rx="5" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        <text x="1280" y="524" text-anchor="middle" font-size="11.5">kényszerzárás-ablak</text>
+        <text x="1280" y="540" text-anchor="middle" font-size="10" fill="var(--ink-muted)">session-határ előtt</text>
+
+        <!-- CORE_SESSION continues down the spine -->
+        <line x1="730" y1="470" x2="730" y2="506" stroke="var(--spine)" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+        <!-- Row E: market-state diamond -->
+        <polygon points="730,506 875,596 730,686 585,596" fill="none" stroke="var(--spine)" stroke-width="1.8"/>
+        <text x="730" y="588" text-anchor="middle" font-weight="600">2. RÉTEG</text>
+        <text x="730" y="606" text-anchor="middle" font-size="11.5">trend × volatilitás?</text>
+
+        <!-- fan to 5 market-state boxes -->
+        <line x1="700" y1="656" x2="140" y2="736" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="660" y1="676" x2="425" y2="736" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="730" y1="686" x2="730" y2="736" stroke="var(--ink-muted)" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="800" y1="676" x2="995" y2="736" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="760" y1="656" x2="1280" y2="736" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+
+        <!-- Row F: 5 market-state boxes -->
+        <rect x="40" y="736" width="200" height="70" rx="5" fill="none" stroke="var(--spine)" stroke-width="1.5"/>
+        <text x="140" y="758" text-anchor="middle" font-size="11" fill="var(--ink-muted)">oldalazó + alacsony vola</text>
+        <text x="140" y="778" text-anchor="middle" font-weight="600">Komponens A</text>
+        <text x="140" y="795" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">Mean-Reversion (validált)</text>
+
+        <rect x="325" y="736" width="200" height="70" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="425" y="758" text-anchor="middle" font-size="11" fill="var(--ink-muted)">oldalazó + magas vola</text>
+        <text x="425" y="782" text-anchor="middle" font-weight="600">Komponens B (?)</text>
+
+        <rect x="630" y="736" width="200" height="70" rx="5" fill="none" stroke="var(--ink-muted)" stroke-dasharray="4 3" stroke-width="1.1"/>
+        <text x="730" y="758" text-anchor="middle" font-size="11" fill="var(--ink-muted)">átmeneti sáv</text>
+        <text x="730" y="782" text-anchor="middle" font-size="11.5" fill="var(--ink-muted)">nincs kereskedés</text>
+        <text x="730" y="797" text-anchor="middle" font-size="10" fill="var(--ink-muted)">whipsaw-zóna</text>
+
+        <rect x="895" y="736" width="200" height="70" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="995" y="758" text-anchor="middle" font-size="11" fill="var(--ink-muted)">trendelő + alacsony vola</text>
+        <text x="995" y="782" text-anchor="middle" font-weight="600">Komponens C (?)</text>
+
+        <rect x="1180" y="736" width="200" height="70" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="1280" y="758" text-anchor="middle" font-size="11" fill="var(--ink-muted)">trendelő + magas vola</text>
+        <text x="1280" y="782" text-anchor="middle" font-weight="600">Komponens D (?)</text>
+
+        <!-- convergence: A, B, D, E + opening-range component -> "van pozíció?" diamond -->
+        <line x1="140" y1="806" x2="640" y2="900" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="425" y1="806" x2="670" y2="900" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="995" y1="806" x2="790" y2="900" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="1280" y1="806" x2="820" y2="900" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <line x1="995" y1="548" x2="600" y2="880" stroke="var(--accent)" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+        <text x="1090" y="640" font-size="10.5" fill="var(--ink-muted)" text-anchor="middle">A / B / C / D / nyitási komp.</text>
+        <text x="1090" y="654" font-size="10.5" fill="var(--ink-muted)" text-anchor="middle">→ egy XOR-választás</text>
+
+        <!-- Row G: van pozíció diamond -->
+        <polygon points="730,900 880,970 730,1040 580,970" fill="none" stroke="var(--spine)" stroke-width="1.8"/>
+        <text x="730" y="964" text-anchor="middle" font-weight="600">Van már nyitott</text>
+        <text x="730" y="982" text-anchor="middle" font-weight="600">pozíció?</text>
+
+        <line x1="640" y1="1010" x2="500" y2="1060" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="545" y="1030" font-size="11" fill="var(--ink-muted)">igen</text>
+        <line x1="820" y1="1010" x2="990" y2="1060" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="945" y="1030" font-size="11" fill="var(--ink-muted)">nem</text>
+
+        <!-- Left branch: position management -->
+        <rect x="370" y="1060" width="260" height="60" rx="5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="500" y="1084" text-anchor="middle" font-weight="600">Pozíció-kezelés</text>
+        <text x="500" y="1102" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">komponens-specifikus exit-logika</text>
+
+        <!-- Right branch: entry check diamond -->
+        <polygon points="990,1060 1110,1120 990,1180 870,1120" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="990" y="1114" text-anchor="middle" font-size="11">belépési feltétel</text>
+        <text x="990" y="1130" text-anchor="middle" font-size="11">teljesül?</text>
+
+        <line x1="940" y1="1150" x2="850" y2="1200" stroke="currentColor" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <text x="865" y="1180" font-size="10.5" fill="var(--ink-muted)">igen</text>
+        <rect x="750" y="1200" width="180" height="46" rx="5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <text x="840" y="1228" text-anchor="middle" font-weight="600">Belépés</text>
+
+        <line x1="1040" y1="1150" x2="1130" y2="1200" stroke="var(--ink-muted)" stroke-width="1.1" marker-end="url(#arrow)"/>
+        <text x="1090" y="1180" font-size="10.5" fill="var(--ink-muted)">nem</text>
+        <rect x="1040" y="1200" width="200" height="46" rx="5" fill="none" stroke="var(--ink-muted)" stroke-dasharray="4 3" stroke-width="1.1"/>
+        <text x="1140" y="1228" text-anchor="middle" font-size="11.5" fill="var(--ink-muted)">nincs trade ezen a baron</text>
+
+        <!-- section header for outcomes -->
+        <text x="140" y="1300" font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="0.06em" fill="var(--ink-muted)">KIFUTÁSI LEHETŐSÉGEK</text>
+        <line x1="40" y1="1312" x2="1420" y2="1312" stroke="var(--border)" stroke-width="1"/>
+
+        <!-- connectors from Pozíció-kezelés down to outcomes -->
+        <line x1="440" y1="1120" x2="150" y2="1340" stroke="currentColor" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="480" y1="1120" x2="430" y2="1340" stroke="currentColor" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="520" y1="1120" x2="700" y2="1340" stroke="currentColor" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="560" y1="1120" x2="985" y2="1340" stroke="currentColor" stroke-width="1" marker-end="url(#arrow)"/>
+
+        <!-- ROLLOVER / PRE_CLOSE routed via right margin to session-boundary outcome -->
+        <polyline points="425,548 425,565 1440,565 1440,1340 1290,1340" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" marker-end="url(#arrow)"/>
+        <polyline points="1280,548 1280,560 1420,560" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/>
+
+        <!-- Row H: 5 outcome boxes -->
+        <rect x="40" y="1340" width="200" height="66" rx="5" fill="var(--good-soft)" stroke="var(--good)" stroke-width="1.3"/>
+        <text x="140" y="1364" text-anchor="middle" font-weight="600">TP</text>
+        <text x="140" y="1382" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">célár elérve</text>
+        <text x="140" y="1397" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">minden fix-TP komponens</text>
+
+        <rect x="325" y="1340" width="200" height="66" rx="5" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.3"/>
+        <text x="425" y="1364" text-anchor="middle" font-weight="600">SL</text>
+        <text x="425" y="1382" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">stop szint sérül</text>
+        <text x="425" y="1397" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">minden komponens</text>
+
+        <rect x="600" y="1340" width="200" height="66" rx="5" fill="var(--good-soft)" stroke="var(--good)" stroke-width="1.3"/>
+        <text x="700" y="1364" text-anchor="middle" font-weight="600">Trailing stop</text>
+        <text x="700" y="1382" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">nyomkövetett kilépés</text>
+        <text x="700" y="1397" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">csak trend-jellegű komp.</text>
+
+        <rect x="885" y="1340" width="200" height="66" rx="5" fill="var(--neutral-outcome-soft)" stroke="var(--neutral-outcome)" stroke-width="1.3"/>
+        <text x="985" y="1364" text-anchor="middle" font-weight="600">Napvégi zárás</text>
+        <text x="985" y="1382" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">nap utolsó bar-ja</text>
+        <text x="985" y="1397" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">csak intraday komp.</text>
+
+        <rect x="1180" y="1340" width="200" height="66" rx="5" fill="var(--neutral-outcome-soft)" stroke="var(--neutral-outcome)" stroke-width="1.3"/>
+        <text x="1280" y="1364" text-anchor="middle" font-weight="600">Session-határ zárás</text>
+        <text x="1280" y="1382" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">rollover / záró ablak</text>
+        <text x="1280" y="1397" text-anchor="middle" font-size="10.5" fill="var(--ink-muted)">kényszerít</text>
+
+      </g>
+    </svg>
+    <figcaption>
+      Egy bar feldolgozási útja: session-fázis kapu → (csak CORE_SESSION-ben) trend×volatilitás rács →
+      XOR komponens-választás → pozíció-kezelés vagy belépés-ellenőrzés → öt lehetséges kifutási állapot.
+      A borostyán dobozok (Komponens B/C/D, nyitási komponens) még nyitott tervezési kérdések — a rács
+      szerkezete és a kapcsoló-logika áll, a bennük futó konkrét szabályok nem. A "Belépés" doboz egy
+      következő bar-tól válik "Pozíció-kezelés"-sé — ezt a hurkot a diagram nem rajzolja külön, mert
+      bar-közi, nem az adott bar döntése.
+    </figcaption>
+  </figure>
+
+  <div class="legend">
+    <div>
+      <h2>Jelölés</h2>
+      <div class="legend-item"><span class="swatch sw-settled"></span>Eldöntött szerkezeti elem (kapu, rács, kapcsoló-logika)</div>
+      <div class="legend-item"><span class="swatch sw-open"></span>Nyitott kérdés — a rács-cella létezik, a benne futó szabály még nem</div>
+      <div class="legend-item"><span class="swatch sw-dead"></span>Zsákutca ezen a bar-on — nincs kereskedés</div>
+    </div>
+    <div>
+      <h2>Kifutás-szemantika</h2>
+      <div class="legend-item"><span class="swatch sw-good"></span>Kedvező kilépés (TP, trailing stop)</div>
+      <div class="legend-item"><span class="swatch sw-bad"></span>Kedvezőtlen kilépés (SL)</div>
+      <div class="legend-item"><span class="swatch sw-neutral"></span>Kényszerített, semleges kilépés (idő/session alapú)</div>
+    </div>
+    <div>
+      <h2>Nyitott kérdések listája</h2>
+      <div class="open-list">
+        · Komponens B — oldalazó + magas vola<br>
+        · Komponens C — trendelő + alacsony vola<br>
+        · Komponens D — trendelő + magas vola<br>
+        · OPENING_RANGE dedikált logika<br>
+        · sávhatárok (mikor kezdődik/végződik minden fázis)
+      </div>
+    </div>
+  </div>
+</div>

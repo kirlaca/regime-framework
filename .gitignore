@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+build/
+dist/
+
+# Machine-specific monitor config (use the *.example.json templates)
+regime_framework/monitoring/terminals.json
+regime_framework/monitoring/live_instances.json
+
+# MQL5 build output (except the self-contained deploy package)
+*.ex5
+!mql5/Experts/RegimeFramework/dist_m10_10d_ustec/*.ex5
+*.log
+
+# Editors / OS
+.vscode/
+*.code-workspace
+Thumbs.db

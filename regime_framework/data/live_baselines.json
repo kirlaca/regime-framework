@@ -1,0 +1,215 @@
+{
+  "_meta": {
+    "generated_at": "2026-09-17T20:39:22+00:00",
+    "source_script": "regime_framework/validation/generate_live_baseline.py",
+    "fold_boundaries_source": "regime_framework.validation.validate_walk_forward.FOLD_BOUNDARIES",
+    "engine_source": "optuna_research (helyi, javított Engine -- NEM a D:\\XM\\Optuna élő másolat, lásd modul-docstring)",
+    "min_reliable_trades": 30
+  },
+  "instances": {
+    "IC Markets:USTEC:202609": {
+      "broker": "IC Markets",
+      "symbol": "USTEC",
+      "magic": 202609,
+      "params_source": "research/icmarkets_ustec_warmstart_retune.py (2026-09-05, score=91.03)",
+      "params_set_file": "%APPDATA%\\MetaQuotes\\Terminal\\<TERMINAL_ID>\\MQL5\\Experts\\RegimeFramework\\presets\\USTEC.set",
+      "generated_at": "2026-09-17T20:38:11+00:00",
+      "components": {
+        "RF_MR": {
+          "trade_count": 243,
+          "win_rate": 50.6,
+          "profit_factor": 1.63,
+          "reliable": true
+        },
+        "RF_TF": {
+          "trade_count": 195,
+          "win_rate": 46.7,
+          "profit_factor": 1.99,
+          "reliable": true
+        },
+        "RF_LHC": {
+          "trade_count": 100,
+          "win_rate": 57.0,
+          "profit_factor": 2.96,
+          "reliable": true
+        },
+        "RF_FS": {
+          "trade_count": 76,
+          "win_rate": 59.2,
+          "profit_factor": 1.73,
+          "reliable": true
+        }
+      }
+    },
+    "IC Markets:US30:202611": {
+      "broker": "IC Markets",
+      "symbol": "US30",
+      "magic": 202611,
+      "params_source": "research/icmarkets_us30_warmstart_retune.py (2026-09-05, score=40.89)",
+      "params_set_file": "%APPDATA%\\MetaQuotes\\Terminal\\<TERMINAL_ID>\\MQL5\\Experts\\RegimeFramework\\presets\\US30.set",
+      "generated_at": "2026-09-17T20:38:46+00:00",
+      "components": {
+        "RF_MR": {
+          "trade_count": 203,
+          "win_rate": 43.3,
+          "profit_factor": 1.35,
+          "reliable": true
+        },
+        "RF_TF": {
+          "trade_count": 148,
+          "win_rate": 41.9,
+          "profit_factor": 1.38,
+          "reliable": true
+        },
+        "RF_LHC": {
+          "trade_count": 140,
+          "win_rate": 55.7,
+          "profit_factor": 2.13,
+          "reliable": true
+        },
+        "RF_FS": {
+          "trade_count": 68,
+          "win_rate": 51.5,
+          "profit_factor": 1.07,
+          "reliable": true
+        }
+      }
+    },
+    "XM:US100Cash#:202609": {
+      "broker": "XM",
+      "symbol": "US100Cash#",
+      "magic": 202609,
+      "params_source": "RegimeFramework_EA_US100Cash.set fejléc (2026-08-22, bruttó pontszám 84.95, később nettóra újraellenőrizve -- lásd PRODUCTION_READINESS.md)",
+      "params_set_file": "%APPDATA%\\MetaQuotes\\Terminal\\<TERMINAL_ID>\\MQL5\\Presets\\RegimeFramework\\RegimeFramework_EA_US100Cash.set",
+      "generated_at": "2026-09-09T11:35:26+00:00",
+      "components": {
+        "RF_MR": {
+          "trade_count": 222,
+          "win_rate": 50.0,
+          "profit_factor": 1.56,
+          "reliable": true
+        },
+        "RF_TF": {
+          "trade_count": 167,
+          "win_rate": 50.9,
+          "profit_factor": 1.76,
+          "reliable": true
+        },
+        "RF_LHC": {
+          "trade_count": 142,
+          "win_rate": 62.0,
+          "profit_factor": 2.86,
+          "reliable": true
+        },
+        "RF_FS": {
+          "trade_count": 70,
+          "win_rate": 57.1,
+          "profit_factor": 1.6,
+          "reliable": true
+        }
+      }
+    },
+    "XM:US500Cash#:2026091": {
+      "broker": "XM",
+      "symbol": "US500Cash#",
+      "magic": 2026091,
+      "params_source": "RegimeFramework_EA_US500Cash.set fejléc (magic kézzel javítva 202629 -> 2026091-re -- a .set fájl elavult, az élő EA saját magát 2026091-ként jelenti be, felhasználóval megerősítve 2026-09-09-én)",
+      "params_set_file": "%APPDATA%\\MetaQuotes\\Terminal\\<TERMINAL_ID>\\MQL5\\Presets\\RegimeFramework\\RegimeFramework_EA_US500Cash.set",
+      "generated_at": "2026-09-09T11:35:59+00:00",
+      "components": {
+        "RF_MR": {
+          "trade_count": 355,
+          "win_rate": 37.7,
+          "profit_factor": 1.49,
+          "reliable": true
+        },
+        "RF_TF": {
+          "trade_count": 83,
+          "win_rate": 54.2,
+          "profit_factor": 2.35,
+          "reliable": true
+        },
+        "RF_LHC": {
+          "trade_count": 108,
+          "win_rate": 56.5,
+          "profit_factor": 2.74,
+          "reliable": true
+        },
+        "RF_FS": {
+          "trade_count": 75,
+          "win_rate": 53.3,
+          "profit_factor": 1.2,
+          "reliable": true
+        }
+      }
+    },
+    "XM:US30Cash#:202649": {
+      "broker": "XM",
+      "symbol": "US30Cash#",
+      "magic": 202649,
+      "params_source": "RegimeFramework_EA_US30Cash.set fejléc",
+      "params_set_file": "%APPDATA%\\MetaQuotes\\Terminal\\<TERMINAL_ID>\\MQL5\\Presets\\RegimeFramework\\RegimeFramework_EA_US30Cash.set",
+      "generated_at": "2026-09-09T11:36:32+00:00",
+      "components": {
+        "RF_MR": {
+          "trade_count": 182,
+          "win_rate": 42.3,
+          "profit_factor": 1.19,
+          "reliable": true
+        },
+        "RF_TF": {
+          "trade_count": 172,
+          "win_rate": 42.4,
+          "profit_factor": 1.15,
+          "reliable": true
+        },
+        "RF_LHC": {
+          "trade_count": 136,
+          "win_rate": 61.8,
+          "profit_factor": 2.8,
+          "reliable": true
+        },
+        "RF_FS": {
+          "trade_count": 68,
+          "win_rate": 51.5,
+          "profit_factor": 1.15,
+          "reliable": true
+        }
+      }
+    },
+    "IC Markets:USTEC:101001": {
+      "broker": "IC Markets",
+      "symbol": "USTEC",
+      "magic": 101001,
+      "params_source": "timeframe_deepdive/FINDINGS_LOG.md 4-6. bejegyzés (500-trial Optuna, 2026-09-17, Strategy Tester valós tick megerősítve IC Markets-en, PF=2.06 vs Python 2.08)",
+      "params_set_file": "%APPDATA%\\MetaQuotes\\Terminal\\<TERMINAL_ID>\\MQL5\\Experts\\RegimeFramework\\dist_m10_10d_ustec\\RegimeFramework_EA_M10_10d_USTEC.set",
+      "generated_at": "2026-09-17T20:39:22+00:00",
+      "components": {
+        "RF_MR": {
+          "trade_count": 212,
+          "win_rate": 24.5,
+          "profit_factor": 1.93,
+          "reliable": true
+        },
+        "RF_TF": {
+          "trade_count": 62,
+          "win_rate": 56.5,
+          "profit_factor": 3.46,
+          "reliable": true
+        },
+        "RF_LHC": {
+          "trade_count": 224,
+          "win_rate": 58.5,
+          "profit_factor": 2.15,
+          "reliable": true
+        },
+        "RF_FS": {
+          "trade_count": 87,
+          "win_rate": 59.8,
+          "profit_factor": 1.62,
+          "reliable": true
+        }
+      }
+    }
+  }
+}
